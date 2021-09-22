@@ -26,6 +26,7 @@
 #include <hw/types.h>
 #include <hw/kernel.h>
 #include <hw/multiboot.h>
+#include <arch/amd64/vmlinux.h>
 
 #include <bmk-core/core.h>
 #include <bmk-core/mainthread.h>
@@ -36,14 +37,41 @@ void
 x86_boot(struct multiboot_info *mbi)
 {
 
+
+    //void *boot_params = (void*)mbi;
+
+
 	cons_init();
+
+
 	bmk_printf("rump kernel bare metal bootstrap\n\n");
 
+
+    //return;
+    //bmk_platform_halt("halt 1");
+
 	cpu_init();
+
+
 	bmk_sched_init();
+    //bmk_printf("bleh\n");
+
+
+
+    //extract_linux_boot_params(boot_params);
+    mbi = (void*) 0x1000;
+
 	multiboot(mbi);
 
-	spl0();
+    /*asm("movl $0xAFFFFFFF, %ebx");
+    asm("x86_sleep: nop;"
+        "nop;"
+        "sub  $1, %ebx;"
+        "jnz x86_sleep;");
+    asm("ud2;");
+    asm("hlt;");*/
 
+	spl0();
 	bmk_sched_startmain(bmk_mainthread, multiboot_cmdline);
+
 }

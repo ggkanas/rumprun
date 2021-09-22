@@ -26,29 +26,29 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
  * IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-     
+
 /* How many bytes from the start of the file we search for the header. */
 #define MULTIBOOT_SEARCH		8192
-     
+
 #define MULTIBOOT_HEADER_MAGIC		0x1badb002
 #define MULTIBOOT_BOOTLOADER_MAGIC	0x2badb002
 #define MULTIBOOT_UNSUPPORTED		0x0000fffc
 #define MULTIBOOT_MOD_ALIGN		0x00001000
 #define MULTIBOOT_INFO_ALIGN		0x00000004
-     
+
 /*
  * Flags set in the 'flags' member of the multiboot header.
  */
-     
+
 #define MULTIBOOT_PAGE_ALIGN                    0x00000001
 #define MULTIBOOT_MEMORY_INFO                   0x00000002
 #define MULTIBOOT_VIDEO_MODE                    0x00000004
 #define MULTIBOOT_AOUT_KLUDGE                   0x00010000
-     
+
 /*
  * Flags to be set in the 'flags' member of the multiboot info structure.
  */
-     
+
 #define MULTIBOOT_INFO_MEMORY		0x00000001
 #define MULTIBOOT_INFO_BOOTDEV		0x00000002
 #define MULTIBOOT_INFO_CMDLINE		0x00000004
@@ -156,7 +156,7 @@ struct multiboot_info {
 	multiboot_uint16_t vbe_interface_off;
 	multiboot_uint16_t vbe_interface_len;
 };
-     
+
 struct multiboot_mmap_entry {
 	multiboot_uint32_t size;
 	multiboot_uint64_t addr;
@@ -165,7 +165,7 @@ struct multiboot_mmap_entry {
 #define MULTIBOOT_MEMORY_RESERVED               2
 	multiboot_uint32_t type;
 } __attribute__((packed));
-     
+
 struct multiboot_mod_list {
 	/* the memory goes from bytes 'mod_start' to 'mod_end-1' inclusive */
 	multiboot_uint32_t mod_start;

@@ -59,15 +59,31 @@ ENTRY(_start)
 	cld
 	movl $bootstack, %esp
 
-	/* save multiboot info pointer at top of stack, we pop it in 64bit */
-	pushl $0
-	pushl %ebx
+    /* save multiboot info pointer at top of stack, we pop it in 64bit */
+    pushl $0
+    pushl %ebx
+
+
 
 	/* save BIOS data area values */
 	movw BIOS_COM1_BASE, %bx
 	movw %bx, bios_com1_base
 	movw BIOS_CRTC_BASE, %bx
 	movw %bx, bios_crtc_base
+
+    /*movl %cr4, %edx
+    movl $32, %ecx
+    mov $0x000B8000, %ebx
+loop:
+    movl $0x00000130, %eax
+    shl $1, %edx
+    adc $0,  %eax
+    mov %ax, (%ebx)
+    add $2, %ebx
+    sub $1, %ecx
+    jnz loop*/
+
+    jmp _start64
 
 	/* clear console */
 	pushl %eax
@@ -120,10 +136,13 @@ ENTRY(_start)
 	orl $(CR0_PG|CR0_WP|CR0_PE), %eax
 	movl %eax, %cr0
 
+
+
+    jmp _start64
 	/* 5: poetically longjump to longmode */
-	pushw $0x08
-	pushl $_start64
-	lret
+    pushw $0x08
+    pushl $_start64
+    lret
 
 	/* NOTREACHED */
 	jmp haltme
@@ -162,6 +181,7 @@ nomultimesg:
  */
 
 .data
+.org 0x500
 .align 64
 .globl cpu_gdt64
 cpu_gdt64:
@@ -169,8 +189,8 @@ cpu_gdt64:
 	.quad 0x00af9b000000ffff	/* 64bit CS		*/
 	.quad 0x00cf9b000000ffff	/* 32bit CS		*/
 	.quad 0x00cf93000000ffff	/* DS			*/
-	.quad 0x0000000000000000	/* TSS part 1 (via C)	*/
-	.quad 0x0000000000000000	/* TSS part 2 (via C)	*/
+	.quad 0x008f8b000000ffff	/* TSS part 1 (via C)	*/
+	.quad 0x008f8b000000ffff	/* TSS part 2 (via C)	*/
 gdt64_end:
 .align 64
 
@@ -178,25 +198,144 @@ gdt64_end:
 gdt64_ptr:
 	.word gdt64_end-cpu_gdt64-1
 	.quad cpu_gdt64
+test_str:
+    .asciz "This is a message\n"
 
 .code64
+
+ENTRY(_start64_from_linux)
+    cld
+    movl $bootstack, %esp
+
+
+
+    /* save multiboot info pointer at top of stack, we pop it in 64bit */
+    push %rbx
+
+    /* save BIOS data area values */
+    movw BIOS_COM1_BASE, %bx
+    movw %bx, bios_com1_base
+    movw BIOS_CRTC_BASE, %bx
+    movw %bx, bios_crtc_base
+
+    /*mov %rsi, %rbx
+    add $0x202, %rbx
+    mov (%rbx),%eax
+    cmp $0x53726448, %eax
+    jne later
+    movl $0xAFFFFFFF, %ebx
+_sleep:
+    nop
+    nop
+    sub  $1, %ebx
+    jnz _sleep
+
+later:
+    ud2
+    hlt*/
+
+    mov %rsi, %rdi
+    call extract_linux_boot_params
+
+
+    jmp _start64
+    hlt
+END(_start64_from_linux)
+
 
 ENTRY(_start64)
 	movq $bootstack, %rsp
 	xorq %rbp, %rbp
+    //ud2
+
+    //leaq test_str(%rip), %rdi
+    //xorq %rax, %rax
+    //call bmk_printf
+
+    /* we don't have printf available yet, just output manually */
+/*    mov $nomultimesg, %ebx
+    mov $(CONS_ADDRESS), %ecx
+1:
+    movsbl (%ebx), %eax
+    test %al, %al
+    je end_print
+    orl $0x500, %eax
+    movl %eax, (%ecx)
+    inc %ebx
+    addl $2, %ecx
+    jmp 1b
+end_print:*/
+
+    //mov $nomultimesg, %si
+
+
+
+
+/*
+    mov $0x0E, %ah
+    movw $8, %cx
+run:
+    movl %ebx, %eax
+    andl $0x0000000F, %eax
+    add $0x30, %al
+    cmp $cx, $0
+    je done
+    int $0x10
+    shl $1, %ebx
+    shl $1, %ebx
+    shl $1, %ebx
+    shl $1, %ebx
+    dec %cx
+    jmp run
+done:*/
+
+
+    /*movl $0xAFFFFFFF, %ebx
+_sleep:
+    nop
+    nop
+    sub  $1, %ebx
+    jnz _sleep*/
+
+
+    //mov %rsi, %rdi
+    //call extract_linux_boot_params
 
 	/* read multiboot info pointer */
-	movq -8(%rsp), %rdi
+	//movq $0x1000, %rdi
+	//movq -8(%rsp), %rdi
+
+
 
 	pushq $0x0
 	pushq $0x0
+
 
 	call x86_boot
+    ud2
 	hlt
 END(_start64)
 
 ENTRY(amd64_lidt)
+    /*mov $0x0fffffff, %rdi
+    lidt (%rdi)
+    mov %cs, %ax
+    and $0b11, %ax
+    cmp $0, %ax
+    jne later
+    movl $0xAFFFFFFF, %ebx
+_sleep:
+    nop
+    nop
+    sub  $1, %ebx
+    jnz _sleep
+
+later:
+    ud2
+    hlt*/
+
 	lidt (%rdi)
+
 	ret
 END(amd64_lidt)
 

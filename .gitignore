@@ -1,2 +1,10 @@
 *~
 *.o
+demo/
+rumprun/
+obj-amd64-hw/
+obj-i386-hw/
+builduk.sh
+builduk2.sh
+controlreg.txt
+

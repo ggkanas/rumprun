@@ -1,5 +1,6 @@
 ASMS=	arch/amd64/locore.S arch/amd64/intr.S
 SRCS+=	arch/amd64/machdep.c
+SRCS+=	arch/amd64/vmlinux.c
 
 SRCS+=	arch/x86/boot.c
 SRCS+=	arch/x86/cons.c arch/x86/vgacons.c arch/x86/serialcons.c
