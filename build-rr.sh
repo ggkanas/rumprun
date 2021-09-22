@@ -105,7 +105,7 @@ parseargs ()
 	DOinstall=false
 
 	orignargs=$#
-	while getopts '?d:hj:ko:qs:' opt; do
+	while getopts '?d:hj:ko:qs:f' opt; do
 		case "$opt" in
 		'j')
 			[ -z "$(echo ${OPTARG} | tr -d '[0-9]')" ] \
@@ -128,6 +128,9 @@ parseargs ()
 		'q')
 			BUILD_QUIET=${BUILD_QUIET:=-}q
 			;;
+        'f')
+            FIRECRACKER=1
+            ;;
 		'h'|'?')
 			helpme
 			exit 1
@@ -353,12 +356,12 @@ buildrump ()
 	extracflags=
 	[ "${MACHINE_GNU_ARCH}" = "x86_64" ] \
 	    && extracflags='-F CFLAGS=-mno-red-zone'
-		
-	
+
+
 	# Disable new errors on GCC 7 which break netbsd-src compilation
 	#
 	[ `${CC} -dumpversion | cut -f1 -d.` -ge 7 ] \
-		&& extracflags="$extracflags -F CPPFLAGS=-Wimplicit-fallthrough=0"	
+		&& extracflags="$extracflags -F CPPFLAGS=-Wimplicit-fallthrough=0"
 
 
 	# build tools
@@ -392,6 +395,7 @@ export RUMPRUN_CC="${RRDEST}/bin/${TOOLTUPLE}-gcc"
 export RUMPRUN_CXX="${RRDEST}/bin/${TOOLTUPLE}-g++"
 export RUMPRUN="${RRDEST}/bin/rumprun"
 export RUMPSTOP="${RRDEST}/bin/rumpstop"
+export FIRECRACKER
 EOF
 	cat > "${RROBJ}/config-PATH.sh" << EOF
 export PATH="${RRDEST}/bin:\${PATH}"

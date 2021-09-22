@@ -25,7 +25,11 @@ endif
 ARCHDIR?= ${MACHINE}
 HW_MACHINE_ARCH?= ${MACHINE_GNU_ARCH}
 
+ifeq (${FIRECRACKER},1)
+LDSCRIPT:=	$(abspath arch/${ARCHDIR}/kern_firecracker.ldscript)
+else
 LDSCRIPT:=	$(abspath arch/${ARCHDIR}/kern.ldscript)
+endif
 SRCS+=		intr.c clock_subr.c kernel.c multiboot.c undefs.c
 
 include ../Makefile.inc
