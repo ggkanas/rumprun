@@ -130,6 +130,8 @@ parseargs ()
 			;;
         'f')
             FIRECRACKER=1
+            ln -f platform/hw/arch/amd64/kern_firecracker.ldscript platform/hw/arch/amd64/kern.ldscript
+            ln -f platform/hw/Makefile_firecracker platform/hw/Makefile
             ;;
 		'h'|'?')
 			helpme
@@ -395,7 +397,6 @@ export RUMPRUN_CC="${RRDEST}/bin/${TOOLTUPLE}-gcc"
 export RUMPRUN_CXX="${RRDEST}/bin/${TOOLTUPLE}-g++"
 export RUMPRUN="${RRDEST}/bin/rumprun"
 export RUMPSTOP="${RRDEST}/bin/rumpstop"
-export FIRECRACKER
 EOF
 	cat > "${RROBJ}/config-PATH.sh" << EOF
 export PATH="${RRDEST}/bin:\${PATH}"
@@ -587,6 +588,9 @@ doinstall ()
 #
 # BEGIN SCRIPT
 #
+
+ln -f platform/hw/arch/amd64/kern_orig.ldscript platform/hw/arch/amd64/kern.ldscript
+ln -f platform/hw/Makefile_orig platform/hw/Makefile
 
 parseargs "$@"
 shift ${ARGSSHIFT}
