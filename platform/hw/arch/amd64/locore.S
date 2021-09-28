@@ -65,6 +65,8 @@ ENTRY(_start)
 
 
 
+
+
 	/* save BIOS data area values */
 	movw BIOS_COM1_BASE, %bx
 	movw %bx, bios_com1_base
@@ -81,9 +83,18 @@ loop:
     mov %ax, (%ebx)
     add $2, %ebx
     sub $1, %ecx
-    jnz loop*/
+    jnz loop
 
-    jmp _start64
+    movl $0xAFFFFFFF, %ebx
+_sleep:
+    nop
+    nop
+    sub  $1, %ebx
+    jnz _sleep
+    ud2
+    hlt*/
+
+    //jmp _start64
 
 	/* clear console */
 	pushl %eax
@@ -138,7 +149,6 @@ loop:
 
 
 
-    jmp _start64
 	/* 5: poetically longjump to longmode */
     pushw $0x08
     pushl $_start64
@@ -181,7 +191,7 @@ nomultimesg:
  */
 
 .data
-.org 0x500
+//.org 0x500
 .align 64
 .globl cpu_gdt64
 cpu_gdt64:
@@ -189,8 +199,10 @@ cpu_gdt64:
 	.quad 0x00af9b000000ffff	/* 64bit CS		*/
 	.quad 0x00cf9b000000ffff	/* 32bit CS		*/
 	.quad 0x00cf93000000ffff	/* DS			*/
-	.quad 0x008f8b000000ffff	/* TSS part 1 (via C)	*/
-	.quad 0x008f8b000000ffff	/* TSS part 2 (via C)	*/
+	//.quad 0x008f8b000000ffff	/* TSS part 1 (via C)	*/
+	//.quad 0x008f8b000000ffff	/* TSS part 2 (via C)	*/
+    .quad 0x0000000000000000
+    .quad 0x0000000000000000
 gdt64_end:
 .align 64
 
@@ -303,7 +315,7 @@ _sleep:
 
 	/* read multiboot info pointer */
 	//movq $0x1000, %rdi
-	//movq -8(%rsp), %rdi
+	movq -8(%rsp), %rdi
 
 
 
