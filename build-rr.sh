@@ -105,7 +105,7 @@ parseargs ()
 	DOinstall=false
 
 	orignargs=$#
-	while getopts '?d:hj:ko:qs:' opt; do
+	while getopts '?d:hj:ko:qs:f' opt; do
 		case "$opt" in
 		'j')
 			[ -z "$(echo ${OPTARG} | tr -d '[0-9]')" ] \
@@ -128,6 +128,13 @@ parseargs ()
 		'q')
 			BUILD_QUIET=${BUILD_QUIET:=-}q
 			;;
+        'f')
+            FIRECRACKER=1
+            echo "why am I here?"
+            sleep 5
+            ln -f platform/hw/arch/amd64/kern_firecracker.ldscript platform/hw/arch/amd64/kern.ldscript
+            ln -f platform/hw/Makefile_firecracker platform/hw/Makefile
+            ;;
 		'h'|'?')
 			helpme
 			exit 1
@@ -353,12 +360,12 @@ buildrump ()
 	extracflags=
 	[ "${MACHINE_GNU_ARCH}" = "x86_64" ] \
 	    && extracflags='-F CFLAGS=-mno-red-zone'
-		
-	
+
+
 	# Disable new errors on GCC 7 which break netbsd-src compilation
 	#
 	[ `${CC} -dumpversion | cut -f1 -d.` -ge 7 ] \
-		&& extracflags="$extracflags -F CPPFLAGS=-Wimplicit-fallthrough=0"	
+		&& extracflags="$extracflags -F CPPFLAGS=-Wimplicit-fallthrough=0"
 
 
 	# build tools
@@ -583,6 +590,9 @@ doinstall ()
 #
 # BEGIN SCRIPT
 #
+
+ln -f platform/hw/arch/amd64/kern_orig.ldscript platform/hw/arch/amd64/kern.ldscript
+ln -f platform/hw/Makefile_orig platform/hw/Makefile
 
 parseargs "$@"
 shift ${ARGSSHIFT}
