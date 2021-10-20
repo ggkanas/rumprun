@@ -46,6 +46,7 @@
 #include <fs/tmpfs/tmpfs_args.h>
 
 #include <bmk-core/platform.h>
+#include <bmk-core/printf.h>
 
 #include <rumprun-base/rumprun.h>
 #include <rumprun-base/config.h>
