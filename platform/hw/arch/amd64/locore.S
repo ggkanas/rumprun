@@ -213,29 +213,37 @@ ENTRY(_start64_from_linux)
     push %rbx
 
     /* save BIOS data area values */
-    movw BIOS_COM1_BASE, %bx
+    movw $BIOS_COM1_BASE, %bx
     movw %bx, bios_com1_base
-    movw BIOS_CRTC_BASE, %bx
+    movw $0x0, %bx
     movw %bx, bios_crtc_base
+    movw bios_com1_base, %bx
 
     /*mov %rsi, %rbx
     add $0x202, %rbx
     mov (%rbx),%eax
-    cmp $0x53726448, %eax
+    cmp $0x0, %bx
     jne later
     movl $0xAFFFFFFF, %ebx
-_sleep:
+    _sleep:
     nop
     nop
     sub  $1, %ebx
     jnz _sleep
-
-later:
     ud2
-    hlt*/
+    hlt
+    later:
+    */
+
 
     mov %rsi, %rdi
     call extract_linux_boot_params
+
+    //_start64 looks for the multiboot info pointer in the boot stack
+    movq %rsp, %rax
+    movq $bootstack, %rsp
+    movq $0x1000, -8(%rsp)
+    movq %rax, %rsp
 
 
     jmp _start64
@@ -303,7 +311,7 @@ _sleep:
 
 	/* read multiboot info pointer */
 	//movq $0x1000, %rdi
-	//movq -8(%rsp), %rdi
+	movq -8(%rsp), %rdi
 
 
 

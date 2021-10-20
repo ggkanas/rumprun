@@ -41,13 +41,28 @@ struct rumpuser_hyperup rumpuser__hyp;
 int
 rumpuser_init(int version, const struct rumpuser_hyperup *hyp)
 {
-
 	if (version != RUMPHYPER_MYVERSION) {
 		bmk_platform_halt("rump kernel hypercall revision mismatch\n");
 		/* NOTREACHED */
 	}
 
-	rumpuser__hyp = *hyp;
+    	rumpuser__hyp.hyp_schedule		= hyp->hyp_schedule;
+    	rumpuser__hyp.hyp_unschedule		= hyp->hyp_unschedule;
+    	rumpuser__hyp.hyp_backend_unschedule	=hyp->hyp_backend_unschedule;
+    	rumpuser__hyp.hyp_backend_schedule	= hyp->hyp_backend_schedule;
+    	rumpuser__hyp.hyp_lwproc_switch	= hyp->hyp_lwproc_switch;
+    	rumpuser__hyp.hyp_lwproc_release	= hyp->hyp_lwproc_release;
+    	rumpuser__hyp.hyp_lwproc_newlwp	= hyp->hyp_lwproc_newlwp;
+    	rumpuser__hyp.hyp_lwproc_curlwp	= hyp->hyp_lwproc_curlwp;
+
+    	rumpuser__hyp.hyp_getpid		= hyp->hyp_getpid;
+    	rumpuser__hyp.hyp_getpid		= hyp->hyp_getpid;
+    	rumpuser__hyp.hyp_lwproc_rfork	= hyp->hyp_lwproc_rfork;
+    	rumpuser__hyp.hyp_lwpexit		= hyp->hyp_lwpexit;
+    	rumpuser__hyp.hyp_execnotify		= hyp->hyp_execnotify;
+
+
+//	rumpuser__hyp = *hyp;
 
 	return rumprun_platform_rumpuser_init();
 }

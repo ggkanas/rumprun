@@ -9,7 +9,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
  * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -61,8 +61,9 @@ int hypervisor_detect(void)
 	else if (ebx == 0x7263694d && ecx == 0x666f736f && edx == 0x76482074)
 		return HYPERVISOR_HYPERV;
 	/* KVM: "KVMKVMKVM\0\0\0" */
-	else if (ebx == 0x4b4d564b && ecx == 0x564b4d56 && edx == 0x0000004d)
+	else if (ebx == 0x4b4d564b && ecx == 0x564b4d56 && edx == 0x0000004d) {
 		return HYPERVISOR_KVM;
+    }
 
 	return 0;
 }

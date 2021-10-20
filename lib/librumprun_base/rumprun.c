@@ -46,6 +46,7 @@
 #include <fs/tmpfs/tmpfs_args.h>
 
 #include <bmk-core/platform.h>
+#include <bmk-core/printf.h>
 
 #include <rumprun-base/rumprun.h>
 #include <rumprun-base/config.h>
@@ -79,17 +80,18 @@ int rumprun_cold = 1;
 void
 rumprun_boot(char *cmdline)
 {
-	struct tmpfs_args ta = {
-		.ta_version = TMPFS_ARGS_VERSION,
-		.ta_size_max = 1*1024*1024,
-		.ta_root_mode = 01777,
-	};
-	int tmpfserrno;
-	char *sysproxy;
-	int rv, x;
+
+	struct tmpfs_args ta;
+	ta.ta_version = TMPFS_ARGS_VERSION;
+	ta.ta_size_max = 1*1024*1024;
+	ta.ta_root_mode = 01777;
+    int tmpfserrno;
+    char *sysproxy;
+    int rv, x;
 
 	rump_boot_setsigmodel(RUMP_SIGMODEL_IGNORE);
 	rump_init();
+
 
 	/* mount /tmp before we let any userspace bits run */
 	rump_sys_mount(MOUNT_TMPFS, "/tmp", 0, &ta, sizeof(ta));
@@ -107,6 +109,7 @@ rumprun_boot(char *cmdline)
 	 */
 	rumprun_lwp_init();
 	_netbsd_userlevel_init();
+
 
 	/* print tmpfs result only after we bootstrapped userspace */
 	if (tmpfserrno == 0) {
@@ -132,13 +135,11 @@ rumprun_boot(char *cmdline)
 			err(1, "failed to init sysproxy at %s", sysproxy);
 		printf("sysproxy listening at: %s\n", sysproxy);
 	}
-
 	/*
 	 * give all threads a chance to run, and ensure that the main
 	 * thread has gone through a context switch
 	 */
 	sched_yield();
-
 	pthread_mutex_init(&w_mtx, NULL);
 	pthread_cond_init(&w_cv, NULL);
 
@@ -187,14 +188,17 @@ mainbouncer(void *arg)
 	const char *progname = rr->rr_argv[0];
 	int rv;
 
+
 	rump_pub_lwproc_switch(rr->rr_lwp);
 
 	pthread_cleanup_push(releaseme, rr);
 
-	fprintf(stderr,"\n=== calling \"%s\" main() ===\n\n", progname);
+    //fprintf(stderr,
+	bmk_printf("\n=== calling \"%s\" main() ===\n\n", progname);
 	rv = rr->rr_mainfun(rr->rr_argc, rr->rr_argv);
 	fflush(stdout);
-	fprintf(stderr,"\n=== main() of \"%s\" returned %d ===\n",
+    //fprintf(stderr,
+	bmk_printf("\n=== main() of \"%s\" returned %d ===\n",
 	    progname, rv);
 
 	pthread_cleanup_pop(1);
@@ -279,16 +283,22 @@ rumprun(int flags, int (*mainfun)(int, char *[]), int argc, char *argv[])
 	}
 	LIST_INSERT_HEAD(&rumprunners, rr, rr_entries);
 
+
+
 	/* async launch? */
 	if ((flags & (RUMPRUN_EXEC_BACKGROUND | RUMPRUN_EXEC_PIPE)) != 0) {
 		return rr;
 	}
 
 	pthread_mutex_lock(&w_mtx);
+
 	while ((rr->rr_flags & (RUMPRUNNER_DONE|RUMPRUNNER_DAEMON)) == 0) {
 		pthread_cond_wait(&w_cv, &w_mtx);
 	}
+
 	pthread_mutex_unlock(&w_mtx);
+
+
 
 	if (rr->rr_flags & RUMPRUNNER_DONE) {
 		rumprun_wait(rr);

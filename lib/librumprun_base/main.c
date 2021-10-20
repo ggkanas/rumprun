@@ -60,7 +60,6 @@ bmk_mainthread(void *cmdline)
 {
 	struct rumprun_exec *rre;
 	void *cookie;
-
 	rumprun_boot(cmdline);
 
 	rre = TAILQ_FIRST(&rumprun_execs);

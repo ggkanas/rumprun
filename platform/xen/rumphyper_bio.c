@@ -248,7 +248,7 @@ rumpuser_close(int fd)
 	bd = &blkdevs[rfd];
 	if (--bd->blk_open == 0) {
 		struct blkfront_dev *toclose = bd->blk_dev;
-		
+
 		/* not sure if this appropriately prevents races either ... */
 		bd->blk_dev = NULL;
 		blkfront_shutdown(toclose);

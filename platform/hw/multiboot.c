@@ -87,9 +87,6 @@ multiboot(struct multiboot_info *mbi)
 	 * `cmdline').
 	 * TODO: Split concept of `cmdline' and `config'.
 	 */
-     bmk_printf("mbi flags: %x\n", mbi->flags);
-     bmk_printf("mod count: %d\n", mbi->mods_count);
-
 
 	if (mbi->flags & MULTIBOOT_INFO_MODS &&
 			mbi->mods_count >= 1 &&

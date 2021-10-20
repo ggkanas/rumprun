@@ -55,6 +55,7 @@
 #include <rumprun-base/parseargs.h>
 
 #include <bmk-core/jsmn.h>
+#include <bmk-core/printf.h>
 
 /* helper macros */
 #define T_SIZE(t) ((t)->end - (t)->start)
@@ -764,12 +765,15 @@ rumprun_config(char *cmdline)
 
 	while (*cmdline != '{') {
 		if (*cmdline == '\0') {
-			warnx("could not find start of json.  no config?");
+
+			//warnx("could not find start of json.  no config?");
+            bmk_printf("%s: could not find start of json.  no config?\n", getprogname());
 			makeargv(strdup("rumprun"));
 			return;
 		}
 		cmdline++;
 	}
+
 
 	cmdline_len = strlen(cmdline);
 	jsmn_init(&p);

@@ -130,8 +130,6 @@ parseargs ()
 			;;
         'f')
             FIRECRACKER=1
-            echo "why am I here?"
-            sleep 5
             ln -f platform/hw/arch/amd64/kern_firecracker.ldscript platform/hw/arch/amd64/kern.ldscript
             ln -f platform/hw/Makefile_firecracker platform/hw/Makefile
             ;;
