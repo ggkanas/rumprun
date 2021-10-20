@@ -87,7 +87,6 @@ multiboot(struct multiboot_info *mbi)
 	 * `cmdline').
 	 * TODO: Split concept of `cmdline' and `config'.
 	 */
-
 	if (mbi->flags & MULTIBOOT_INFO_MODS &&
 			mbi->mods_count >= 1 &&
 			mbi->mods_addr != 0) {
@@ -105,7 +104,6 @@ multiboot(struct multiboot_info *mbi)
 		bmk_memcpy(multiboot_cmdline, cmdline, cmdlinelen);
 		multiboot_cmdline[cmdlinelen] = 0;
 	}
-
 
 	/* If not using multiboot module for config, save the command line
 	 * before something overwrites it */

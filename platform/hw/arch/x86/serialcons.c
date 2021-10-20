@@ -59,5 +59,4 @@ serialcons_putc(int c)
 	while ((inb(combase + COM_LSR) & 0x20) == 0)
 		;
 	outb(combase + COM_DATA, c);
-
 }

@@ -58,20 +58,15 @@ mmap(void *addr, size_t len, int prot, int flags, int fd, off_t pos)
 	register_t retval[2];
 	int error;
 
-
 	bmk_memset(&callarg, 0, sizeof(callarg));
 	SPARG(&callarg, addr) = addr;
 	SPARG(&callarg, len) = len;
-
 	SPARG(&callarg, prot) = prot;
 	SPARG(&callarg, flags) = flags;
 	SPARG(&callarg, fd) = fd;
 	SPARG(&callarg, pos) = pos;
 
-
-
 	error = rump_syscall(SYS_mmap, &callarg, sizeof(callarg), retval);
-
 	errno = error;
 	if (error == 0) {
 		return (void *)retval[0];
