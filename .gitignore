@@ -8,4 +8,4 @@ obj-*/
 builduk.sh
 builduk2.sh
 controlreg.txt
-
+platform/hw/Makefile

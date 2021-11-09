@@ -33,16 +33,14 @@
 #include <bmk-core/sched.h>
 #include <bmk-core/printf.h>
 
+asm("nomultimesg: .asciz \"not multibooted, halting!\"");
+
 void
 x86_boot(struct multiboot_info *mbi)
 {
 
 
-
     //void *boot_params = (void*)mbi;
-
-
-
 	cons_init();
 
 
@@ -67,6 +65,7 @@ x86_boot(struct multiboot_info *mbi)
     asm("hlt;");*/
 
 
+
 	bmk_sched_init();
     bmk_printf("bleh\n");
 
@@ -87,6 +86,7 @@ x86_boot(struct multiboot_info *mbi)
         "jnz x86_sleep;");
     asm("ud2;");
     asm("hlt;");*/
+
 
 
 
