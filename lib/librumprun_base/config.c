@@ -38,6 +38,7 @@
 #include <isofs/cd9660/cd9660_mount.h>
 
 #include <dev/vndvar.h>
+#include <dev/mmio.h>
 
 #include <assert.h>
 #include <err.h>
@@ -755,6 +756,8 @@ rumprun_config(char *cmdline)
 	unsigned int i;
 	int ntok;
 
+    //Discover MMIO Devices, if any
+    parse_mmio_device_configuration(cmdline);
 	/* is the config file on rootfs?  if so, mount & dig it out */
 	cfg = rumprun_config_path(cmdline);
 	if (cfg != NULL) {
