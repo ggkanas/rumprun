@@ -38,7 +38,6 @@
 #include <isofs/cd9660/cd9660_mount.h>
 
 #include <dev/vndvar.h>
-#include <dev/mmio.h>
 
 #include <assert.h>
 #include <err.h>
@@ -51,6 +50,7 @@
 
 #include <rump/rump.h>
 #include <rump/netconfig.h>
+#include <dev/mmio-api.h>
 
 #include <rumprun-base/config.h>
 #include <rumprun-base/parseargs.h>
