@@ -29,6 +29,7 @@
 #include <bmk-core/platform.h>
 #include <bmk-core/sched.h>
 #include <bmk-core/string.h>
+#include <bmk-core/printf.h>
 
 #include <bmk-rumpuser/core_types.h>
 #include <bmk-rumpuser/rumpuser.h>

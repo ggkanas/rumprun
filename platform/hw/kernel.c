@@ -44,10 +44,11 @@ bmk_platform_splhigh(void)
 void
 bmk_platform_splx(unsigned long x)
 {
-
-	spl0();
+    //bmk_printf("what even?\n");
+	//spl0();
+    //bmk_printf("what evener?\n");
 }
- 
+
 void __attribute__((noreturn))
 bmk_platform_halt(const char *panicstring)
 {

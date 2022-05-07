@@ -18,6 +18,10 @@ ifeq (${MACHINE},evbarm)
 supported:= true
 ARCHDIR= arm/integrator
 endif
+ifeq (${MACHINE},evbearmhf-eb)
+supported:= true
+ARCHDIR= arm/integrator
+endif
 ifneq (${supported},true)
 $(error only supported target is x86, you have ${MACHINE})
 endif

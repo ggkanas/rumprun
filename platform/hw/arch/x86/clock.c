@@ -533,7 +533,7 @@ bmk_platform_cpu_block(bmk_time_t until)
 	spldepth = 0;
 	__asm__ __volatile__(
 		"sti;\n"
-		"hlt;\n"
+		//"hlt;\n"
 		"cli;\n");
 	spldepth = s;
 }

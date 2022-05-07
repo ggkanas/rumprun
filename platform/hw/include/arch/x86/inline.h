@@ -1,3 +1,5 @@
+#include <bmk-core/printf.h>
+
 static inline uint8_t
 inb(uint16_t port)
 {
@@ -45,11 +47,12 @@ splhigh(void)
 static inline void
 spl0(void)
 {
-
-	if (spldepth == 0)
+	if (spldepth == 0) {
 		bmk_platform_halt("out of interrupt depth!");
-	if (--spldepth == 0)
+    }
+	if (--spldepth == 0) {
 		__asm__ __volatile__("sti");
+    }
 }
 
 static inline void

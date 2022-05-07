@@ -338,7 +338,6 @@ schedule(void)
 				break;
 			}
 		}
-
 		if ((next = TAILQ_FIRST(&runq)) != NULL) {
 			bmk_assert(next->bt_flags & THR_RUNQ);
 			bmk_assert((next->bt_flags & THR_DEAD) == 0);
@@ -358,7 +357,6 @@ schedule(void)
 	TAILQ_REMOVE(&runq, next, bt_schedq);
 	setflags(next, THR_RUNNING, THR_RUNQ);
 	bmk_platform_splx(flags);
-
 	/*
 	 * No switch can happen if:
 	 *  + timeout expired while we were in here
@@ -629,10 +627,12 @@ bmk_sched_block(void)
 	bmk_assert((thread->bt_flags & THR_TIMEDOUT) == 0);
 	bmk_assert(thread->bt_flags & THR_BLOCKPREP);
 
+
 	schedule();
 
 	tflags = thread->bt_flags;
 	thread->bt_flags &= ~(THR_TIMEDOUT | THR_BLOCKPREP);
+    //bmk_printf("bazinga4\n");
 
 	return tflags & THR_TIMEDOUT ? BMK_ETIMEDOUT : 0;
 }

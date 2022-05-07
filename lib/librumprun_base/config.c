@@ -50,7 +50,6 @@
 
 #include <rump/rump.h>
 #include <rump/netconfig.h>
-#include <dev/mmio-api.h>
 
 #include <rumprun-base/config.h>
 #include <rumprun-base/parseargs.h>
@@ -755,9 +754,6 @@ rumprun_config(char *cmdline)
 	size_t cmdline_len;
 	unsigned int i;
 	int ntok;
-
-    //Discover MMIO Devices, if any
-    parse_mmio_device_configuration(cmdline);
 	/* is the config file on rootfs?  if so, mount & dig it out */
 	cfg = rumprun_config_path(cmdline);
 	if (cfg != NULL) {

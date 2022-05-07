@@ -29,6 +29,7 @@
 #include <sys/mount.h>
 #include <sys/queue.h>
 #include <sys/sysctl.h>
+#include <dev/mmio-api.h>
 
 #include <assert.h>
 #include <err.h>
@@ -88,6 +89,9 @@ rumprun_boot(char *cmdline)
     int tmpfserrno;
     char *sysproxy;
     int rv, x;
+
+    //Discover MMIO Devices, if any
+    rump_parse_mmio_device_configuration(cmdline);
 
 	rump_boot_setsigmodel(RUMP_SIGMODEL_IGNORE);
 	rump_init();
