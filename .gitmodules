@@ -4,3 +4,4 @@
 [submodule "src-netbsd"]
 	path = src-netbsd
 	url = https://github.com/ggkanas/src-netbsd.git
+	branch = virtio
