@@ -83,7 +83,6 @@ loop:
     sub $1, %ecx
     jnz loop*/
 
-    jmp _start64
 
 	/* clear console */
 	pushl %eax
@@ -138,7 +137,6 @@ loop:
 
 
 
-    jmp _start64
 	/* 5: poetically longjump to longmode */
     pushw $0x08
     pushl $_start64
@@ -189,8 +187,8 @@ cpu_gdt64:
 	.quad 0x00af9b000000ffff	/* 64bit CS		*/
 	.quad 0x00cf9b000000ffff	/* 32bit CS		*/
 	.quad 0x00cf93000000ffff	/* DS			*/
-	.quad 0x008f8b000000ffff	/* TSS part 1 (via C)	*/
-	.quad 0x008f8b000000ffff	/* TSS part 2 (via C)	*/
+	.quad 0x0000000000000000	/* TSS part 1 (via C)	*/
+	.quad 0x0000000000000000	/* TSS part 2 (via C)	*/
 gdt64_end:
 .align 64
 
@@ -213,11 +211,30 @@ ENTRY(_start64_from_linux)
     push %rbx
 
     /* save BIOS data area values */
-    movw $BIOS_COM1_BASE, %bx
+    movw $0x3f8, %bx
     movw %bx, bios_com1_base
     movw $0x0, %bx
     movw %bx, bios_crtc_base
     movw bios_com1_base, %bx
+
+    /* clear console */
+	push %rax
+	movw $' ', %ax
+	mov $(CONS_ADDRESS), %rdi
+	mov $(CONS_WIDTH*CONS_HEIGHT), %rcx
+	rep stosw
+	pop %rax
+
+    lgdt (gdt64_ptr)
+
+1:	movl $0x18, %eax
+	movl %eax, %ds
+	movl %eax, %es
+	movl %eax, %ss
+
+	xorl %eax, %eax
+	movl %eax, %fs
+	movl %eax, %gs
 
     /*mov %rsi, %rbx
     add $0x202, %rbx

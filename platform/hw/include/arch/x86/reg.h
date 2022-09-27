@@ -57,6 +57,5 @@
 #define COM_LCTL	3
 #define COM_LSR		5
 
-//#define BIOS_COM1_BASE	0x400
-#define BIOS_COM1_BASE	0x3f8
+#define BIOS_COM1_BASE	0x400
 #define BIOS_CRTC_BASE	0x463
