@@ -9,3 +9,4 @@ builduk.sh
 builduk*.sh
 controlreg.txt
 platform/hw/Makefile
+measure-time.sh
