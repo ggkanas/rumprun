@@ -3,4 +3,5 @@
 	url = https://github.com/rumpkernel/buildrump.sh
 [submodule "src-netbsd"]
 	path = src-netbsd
+	branch = virtio
 	url = https://github.com/ggkanas/src-netbsd.git
