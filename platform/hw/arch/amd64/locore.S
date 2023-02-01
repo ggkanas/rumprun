@@ -253,6 +253,21 @@ ENTRY(_start64_from_linux)
     */
 
 
+    /* 1: enable pae and sse */
+    movq %cr4, %rax
+    orl $(CR4_OSXMMEXCPT|CR4_OSFXSR|CR4_PAE), %eax
+    movq %rax, %cr4
+
+    /* 3: load pml4 pointer */
+    /*movq $cpu_pml4, %rax
+    movq %rax, %cr3*/
+
+    /* 4: enable paging */
+    movq %cr0, %rax
+    orl $(CR0_PG|CR0_WP|CR0_PE), %eax
+    movq %rax, %cr0
+
+
     mov %rsi, %rdi
     call extract_linux_boot_params
 
