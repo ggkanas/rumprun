@@ -205,12 +205,11 @@ test_str:
 
 ENTRY(_start64_from_linux)
     cld
-    movl $bootstack, %esp
+    mov $bootstack, %rsp
 
-
-
-    /* save multiboot info pointer at top of stack, we pop it in 64bit */
-    push %rbx
+    /* _start64 looks for the multiboot info pointer in the boot stack
+       extract_linux_boot_params assumes the pointer is at 0x1000 */
+    push $0x1000
 
     /* save BIOS data area values */
     movw $BIOS_COM1_BASE, %bx
@@ -219,32 +218,34 @@ ENTRY(_start64_from_linux)
     movw %bx, bios_crtc_base
     movw bios_com1_base, %bx
 
-    /*mov %rsi, %rbx
-    add $0x202, %rbx
-    mov (%rbx),%eax
-    cmp $0x0, %bx
-    jne later
-    movl $0xAFFFFFFF, %ebx
-    _sleep:
-    nop
-    nop
-    sub  $1, %ebx
-    jnz _sleep
-    ud2
-    hlt
-    later:
-    */
+	lgdt (gdt64_ptr)
+
+1:	movl $0x18, %eax
+	movl %eax, %ds
+	movl %eax, %es
+	movl %eax, %ss
+
+	xorl %eax, %eax
+	movl %eax, %fs
+	movl %eax, %gs
+
+    /* 1: enable pae and sse */
+    movq %cr4, %rax
+    orl $(CR4_OSXMMEXCPT|CR4_OSFXSR|CR4_PAE), %eax
+    movq %rax, %cr4
+
+    /* 3: load pml4 pointer */
+    movq $cpu_pml4, %rax
+    movq %rax, %cr3
+
+    /* 4: enable paging */
+    movq %cr0, %rax
+    orl $(CR0_PG|CR0_WP|CR0_PE), %eax
+    movq %rax, %cr0
 
 
     mov %rsi, %rdi
     call extract_linux_boot_params
-
-    //_start64 looks for the multiboot info pointer in the boot stack
-    movq %rsp, %rax
-    movq $bootstack, %rsp
-    movq $0x1000, -8(%rsp)
-    movq %rax, %rsp
-
 
     jmp _start64
     hlt
@@ -254,73 +255,14 @@ END(_start64_from_linux)
 ENTRY(_start64)
 	movq $bootstack, %rsp
 	xorq %rbp, %rbp
-    //ud2
-
-    //leaq test_str(%rip), %rdi
-    //xorq %rax, %rax
-    //call bmk_printf
-
-    /* we don't have printf available yet, just output manually */
-/*    mov $nomultimesg, %ebx
-    mov $(CONS_ADDRESS), %ecx
-1:
-    movsbl (%ebx), %eax
-    test %al, %al
-    je end_print
-    orl $0x500, %eax
-    movl %eax, (%ecx)
-    inc %ebx
-    addl $2, %ecx
-    jmp 1b
-end_print:*/
-
-    //mov $nomultimesg, %si
-
-
-
-
-/*
-    mov $0x0E, %ah
-    movw $8, %cx
-run:
-    movl %ebx, %eax
-    andl $0x0000000F, %eax
-    add $0x30, %al
-    cmp $cx, $0
-    je done
-    int $0x10
-    shl $1, %ebx
-    shl $1, %ebx
-    shl $1, %ebx
-    shl $1, %ebx
-    dec %cx
-    jmp run
-done:*/
-
-
-    /*movl $0xAFFFFFFF, %ebx
-_sleep:
-    nop
-    nop
-    sub  $1, %ebx
-    jnz _sleep*/
-
-
-    //mov %rsi, %rdi
-    //call extract_linux_boot_params
 
 	/* read multiboot info pointer */
-	//movq $0x1000, %rdi
 	movq -8(%rsp), %rdi
 
-
-
 	pushq $0x0
 	pushq $0x0
-
 
 	call x86_boot
-    ud2
 	hlt
 END(_start64)
 

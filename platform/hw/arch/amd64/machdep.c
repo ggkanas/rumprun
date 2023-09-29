@@ -78,7 +78,8 @@ struct tss {
 	unsigned int	tss_reserved4;
 } __attribute__((__packed__)) mytss;
 
-static struct gate_descriptor *idt = (struct gate_descriptor *) 0x520;
+//static struct gate_descriptor *idt = (struct gate_descriptor *) 0x520;
+static struct gate_descriptor idt[256];
 
 extern unsigned long cpu_gdt64[];
 
@@ -140,7 +141,7 @@ cpu_init(void)
 	td->td_hibase = 0xffffffffffUL;
 	td->td_zero = 0;
 
-	//amd64_ltr(4*8);
+	amd64_ltr(4*8);
 
     /*asm("movl $0xAFFFFFFF, %ebx");
     asm("mach_sleep: nop;"

@@ -9,3 +9,6 @@ builduk.sh
 builduk*.sh
 controlreg.txt
 platform/hw/Makefile
+.vscode/
+ar/
+measure-time.sh
