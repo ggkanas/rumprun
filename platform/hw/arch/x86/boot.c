@@ -39,22 +39,8 @@ x86_boot(struct multiboot_info *mbi)
 	cons_init();
 	bmk_printf("rump kernel bare metal bootstrap\n\n");
 	cpu_init();
-    bmk_printf("hi\n");
 	bmk_sched_init();
-    bmk_printf("hi\n");
-    //mbi = (void*) 0x1000;
-
 	multiboot(mbi);
-    bmk_printf("hi\n");
-
-
-    /*asm("movl $0xAFFFFFFF, %ebx");
-    asm("x86_sleep: nop;"
-        "nop;"
-        "sub  $1, %ebx;"
-        "jnz x86_sleep;");
-    asm("ud2;");
-    asm("hlt;");*/
 	spl0();
     bmk_printf("%s\n", multiboot_cmdline);
 	bmk_sched_startmain(bmk_mainthread, multiboot_cmdline);
