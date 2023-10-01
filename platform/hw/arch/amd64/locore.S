@@ -189,8 +189,8 @@ cpu_gdt64:
 	.quad 0x00af9b000000ffff	/* 64bit CS		*/
 	.quad 0x00cf9b000000ffff	/* 32bit CS		*/
 	.quad 0x00cf93000000ffff	/* DS			*/
-	.quad 0x008f8b000000ffff	/* TSS part 1 (via C)	*/
-	.quad 0x008f8b000000ffff	/* TSS part 2 (via C)	*/
+	.quad 0x0000000000000000	/* TSS part 1 (via C)	*/
+	.quad 0x0000000000000000	/* TSS part 2 (via C)	*/
 gdt64_end:
 .align 64
 
@@ -212,7 +212,7 @@ ENTRY(_start64_from_linux)
     push $0x1000
 
     /* save BIOS data area values */
-    movw $BIOS_COM1_BASE, %bx
+    movw $0x3f8, %bx
     movw %bx, bios_com1_base
     movw $0x0, %bx
     movw %bx, bios_crtc_base

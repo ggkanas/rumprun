@@ -44,9 +44,7 @@ bmk_platform_splhigh(void)
 void
 bmk_platform_splx(unsigned long x)
 {
-    //bmk_printf("what even?\n");
-	//spl0();
-    //bmk_printf("what evener?\n");
+	spl0();
 }
 
 void __attribute__((noreturn))
