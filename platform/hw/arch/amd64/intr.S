@@ -138,6 +138,7 @@ ENTRY(x86_isr_##intnum)							\
 	iretq								;\
 END(x86_isr_##intnum)
 
+INTRSTUB(5)
 INTRSTUB(9)
 INTRSTUB(10)
 INTRSTUB(11)

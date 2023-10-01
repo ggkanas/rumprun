@@ -123,7 +123,7 @@ doisr(void *arg)
 	}
 }
 
-void
+void *
 bmk_isr_rumpkernel(int (*func)(void *), void *arg, int intr, int flags)
 {
 	struct intrhand *ih;
@@ -163,6 +163,9 @@ bmk_isr_rumpkernel(int (*func)(void *), void *arg, int intr, int flags)
 	SLIST_INSERT_HEAD(&isr_ih[routedintr], ih, ih_entries);
 	if ((unsigned)intr < isr_lowest)
 		isr_lowest = intr;
+	
+	return ih;
+
 }
 
 void

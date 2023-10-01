@@ -101,6 +101,22 @@ rumpcomp_pci_irq_establish(unsigned cookie, int (*handler)(void *), void *data)
 	return &intrs[cookie];
 }
 
+void *
+rumpcomp_irq_establish(int intr, int (*handler)(void *), void *data);
+
+void * 
+rumpcomp_irq_establish(int intr, int (*handler)(void *), void *data)
+{
+       return bmk_isr_rumpkernel(handler, data, intr, BMK_INTR_ROUTED);
+
+    //    int cookie;
+    //    for (cookie = 0; cookie < BMK_MAXINTR; ++cookie) {
+    //            if (intrs[cookie] == intr) return &intrs[cookie];
+    //    }
+
+    //    return NULL;
+}
+
 /*
  * Well at least there's some benefit to running on physical memory.
  * This stuff is really trivial.

@@ -21,7 +21,7 @@ bmk_time_t cpu_clock_epochoffset(void);
 
 void isr(int);
 void intr_init(void);
-void bmk_isr_rumpkernel(int (*)(void *), void *, int, int);
+void* bmk_isr_rumpkernel(int (*)(void *), void *, int, int);
 
 #define BMK_INTR_ROUTED 0x01
 
