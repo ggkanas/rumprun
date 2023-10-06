@@ -27,6 +27,7 @@
 #include <arch/x86/var.h>
 
 void x86_isr_5(void);
+void x86_isr_6(void);
 void x86_isr_9(void);
 void x86_isr_10(void);
 void x86_isr_11(void);
@@ -45,6 +46,7 @@ cpu_intr_init(int intr)
 #define FILLGATE(n) case n: x86_fillgate(32+n, x86_isr_##n, 0); break
 	switch (intr) {
 		FILLGATE(5);
+		FILLGATE(6);
 		FILLGATE(9);
 		FILLGATE(10);
 		FILLGATE(11);

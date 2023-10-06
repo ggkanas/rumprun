@@ -139,6 +139,7 @@ ENTRY(x86_isr_##intnum)							\
 END(x86_isr_##intnum)
 
 INTRSTUB(5)
+INTRSTUB(6)
 INTRSTUB(9)
 INTRSTUB(10)
 INTRSTUB(11)

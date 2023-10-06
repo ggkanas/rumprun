@@ -90,7 +90,7 @@ rumprun_boot(char *cmdline)
     char *sysproxy;
     int rv, x;
 
-    //Discover MMIO Devices, if any
+	//Discover MMIO Devices, if any
     rump_parse_mmio_device_configuration(cmdline);
 
 	rump_boot_setsigmodel(RUMP_SIGMODEL_IGNORE);
